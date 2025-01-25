@@ -1,9 +1,5 @@
 import { CREATE_TASK, DELETE_TASK, UPDATE_TASK , TOGGLE_COMPLETED } from "./TaskTypes"
-
-const initialState = {
-    task:[]
-}
-
+import initialState from "./TaskInitial";
 export const  taskReducer = ( state = initialState , action ) => {
     switch(action.type){
         case CREATE_TASK:

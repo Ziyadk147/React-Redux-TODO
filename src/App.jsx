@@ -1,31 +1,33 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { connect, useDispatch, useSelector } from "react-redux";
-import {
-  createTask,
-  deleteTask,
-  toggleCompleted,
-  updateTask,
-} from "./Redux/Task/TaskActions";
+// import {
+//   createTask,
+//   deleteTask,
+//   toggleCompleted,
+//   updateTask,
+// } from "./Redux/Task/TaskActions";
+import useTaskActions from "./Redux/Task/TaskHook";
 
 const App = () => {
 
   const [task, setTask] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-
+  const {addTask , editTask , toggleTask , destroyTask} = useTaskActions(); //getting functions from custom hook
   const tasks = useSelector((state) => state.task)
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
   const handleAddOrUpdateTask = () => {
     if (isEditing) {
 
-      dispatch(updateTask(task, editIndex));
+      editTask(task, editIndex);
       setIsEditing(false);
       setEditIndex(null);
     } else {
 
-      dispatch(createTask(task));
+      // dispatch(createTask(task));
+      addTask(task)
     }
     setTask(""); 
   };
@@ -80,13 +82,13 @@ const App = () => {
               </button>
               <button
                 className="btn btn-sm btn-success me-2"
-                onClick={() => dispatch(toggleCompleted(index, !t.isCompleted))}
+                onClick={() => toggleTask(index, !t.isCompleted)}
               >
                 {t.isCompleted ? "Undo" : "Complete"}
               </button>
               <button
                 className="btn btn-sm btn-danger"
-                onClick={() => dispatch(deleteTask(index))}
+                onClick={() => destroyTask(index)}
               >
                 Delete
               </button>
