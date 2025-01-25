@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import {
   createTask,
   deleteTask,
@@ -8,28 +8,26 @@ import {
   updateTask,
 } from "./Redux/Task/TaskActions";
 
-const App = ({
-  addTask,
-  updateTask,
-  deleteTask,
-  tasks,
-  toggleCompleted,
-}) => {
+const App = () => {
+
   const [task, setTask] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
+  const tasks = useSelector((state) => state.task)
+  const dispatch = useDispatch()
+
   const handleAddOrUpdateTask = () => {
     if (isEditing) {
-      // Update the task
-      updateTask(task, editIndex);
+
+      dispatch(updateTask(task, editIndex));
       setIsEditing(false);
       setEditIndex(null);
     } else {
-      // Add a new task
-      addTask(task);
+
+      dispatch(createTask(task));
     }
-    setTask(""); // Clear the input field
+    setTask(""); 
   };
 
   const handleEditTask = (text, index) => {
@@ -82,13 +80,13 @@ const App = ({
               </button>
               <button
                 className="btn btn-sm btn-success me-2"
-                onClick={() => toggleCompleted(index, !t.isCompleted)}
+                onClick={() => dispatch(toggleCompleted(index, !t.isCompleted))}
               >
                 {t.isCompleted ? "Undo" : "Complete"}
               </button>
               <button
                 className="btn btn-sm btn-danger"
-                onClick={() => deleteTask(index)}
+                onClick={() => dispatch(deleteTask(index))}
               >
                 Delete
               </button>
@@ -100,20 +98,21 @@ const App = ({
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    tasks: state.task,
-  };
-};
+// const mapStateToProps = (state) => {
+//   return {
+//     tasks: state.task,
+//   };
+// };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addTask: (data) => dispatch(createTask(data)),
-    updateTask: (text, index) => dispatch(updateTask(text, index)),
-    deleteTask: (index) => dispatch(deleteTask(index)),
-    toggleCompleted: (index, isCompleted) =>
-      dispatch(toggleCompleted(index, isCompleted)),
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     addTask: (data) => dispatch(createTask(data)),
+//     updateTask: (text, index) => dispatch(updateTask(text, index)),
+//     deleteTask: (index) => dispatch(deleteTask(index)),
+//     toggleCompleted: (index, isCompleted) =>
+//       dispatch(toggleCompleted(index, isCompleted)),
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+// export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App
